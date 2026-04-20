@@ -1,0 +1,20 @@
+<%- include('../partials/header') %>
+<%- include('../partials/menu') %>
+
+<main>
+    <h2>Catway n° <%= catway.catwayNumber %></h2>
+
+    <dl>
+        <dt>Numero</dt>
+        <dd><%= catway.catwayNumber %></dd>
+        <dt>Type</dt>
+        <dd><%= catway.catwayType %></dd>
+        <dt>Etat</dt>
+        <dd><%= catway.catwayState %></dd>
+    </dl>
+
+    <a href="/catways-page/<%= catway.catwayNumber %>/edit">Modifier</a>
+    <a href="/catways-page">Retour</a>
+</main>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,36 @@
+<%- include('../partials/header') %>
+<%- include('../partials/menu') %>
+
+<main>
+    <h2>Liste des catways</h2>
+    <p><a href="/catways-page/new" class="btn">Ajouter un catway</a></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Numero</th>
+                <th>Type</th>
+                <th>Etat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% catways.forEach(function (c) { %>
+                <tr>
+                    <td><%= c.catwayNumber %></td>
+                    <td><%= c.catwayType %></td>
+                    <td><%= c.catwayState %></td>
+                    <td>
+                        <a href="/catways-page/<%= c.catwayNumber %>">Voir</a>
+                        <a href="/catways-page/<%= c.catwayNumber %>/edit">Modifier</a>
+                        <form action="/catways-page/<%= c.catwayNumber %>/delete" method="POST" style="display:inline">
+                            <button type="submit" onclick="return confirm('Supprimer ce catway ?')">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</main>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,18 @@
+<%- include('../partials/header') %>
+<%- include('../partials/menu') %>
+
+<main>
+    <h2>Detail de l'utilisateur</h2>
+
+    <dl>
+        <dt>Nom d'utilisateur</dt>
+        <dd><%= userEdit.username %></dd>
+        <dt>Email</dt>
+        <dd><%= userEdit.email %></dd>
+    </dl>
+
+    <a href="/users-page/<%= userEdit.email %>/edit">Modifier</a>
+    <a href="/users-page">Retour</a>
+</main>
+
+<%- include('../partials/footer') %>

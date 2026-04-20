@@ -1,0 +1,29 @@
+<%- include('../partials/header') %>
+<%- include('../partials/menu') %>
+
+<main>
+    <h2><%= catway ? 'Modifier le catway' : 'Nouveau catway' %></h2>
+
+    <form action="<%= catway ? '/catways-page/' + catway.catwayNumber + '/edit' : '/catways-page' %>" method="POST">
+        <% if (!catway) { %>
+            <label for="catwayNumber">Numero</label>
+            <input type="number" id="catwayNumber" name="catwayNumber" required>
+
+            <label for="catwayType">Type</label>
+            <select id="catwayType" name="catwayType" required>
+                <option value="short">short</option>
+                <option value="long">long</option>
+            </select>
+        <% } else { %>
+            <p>Catway numero <strong><%= catway.catwayNumber %></strong> (<%= catway.catwayType %>)</p>
+        <% } %>
+
+        <label for="catwayState">Etat</label>
+        <textarea id="catwayState" name="catwayState" required><%= catway ? catway.catwayState : '' %></textarea>
+
+        <button type="submit">Enregistrer</button>
+        <a href="/catways-page">Annuler</a>
+    </form>
+</main>
+
+<%- include('../partials/footer') %>

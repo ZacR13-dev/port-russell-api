@@ -1,0 +1,34 @@
+<%- include('partials/header') %>
+
+<main class="home">
+    <section class="presentation">
+        <h2>Bienvenue</h2>
+        <p>
+            Cette application permet a la capitainerie du port de plaisance Russell
+            de gerer les catways (appontements) et leurs reservations.
+        </p>
+        <p>
+            Les utilisateurs autorises peuvent se connecter pour acceder au tableau de bord
+            et effectuer les operations de gestion.
+        </p>
+        <p><a href="/documentation">Consulter la documentation de l'API</a></p>
+    </section>
+
+    <section class="login">
+        <h2>Connexion</h2>
+        <% if (error) { %>
+            <p class="error"><%= error %></p>
+        <% } %>
+        <form action="/login" method="POST">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Se connecter</button>
+        </form>
+    </section>
+</main>
+
+<%- include('partials/footer') %>

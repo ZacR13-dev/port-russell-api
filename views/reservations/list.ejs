@@ -1,0 +1,40 @@
+<%- include('../partials/header') %>
+<%- include('../partials/menu') %>
+
+<main>
+    <h2>Liste des reservations</h2>
+    <p><a href="/reservations-page/new" class="btn">Ajouter une reservation</a></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Catway</th>
+                <th>Client</th>
+                <th>Bateau</th>
+                <th>Debut</th>
+                <th>Fin</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% reservations.forEach(function (r) { %>
+                <tr>
+                    <td><%= r.catwayNumber %></td>
+                    <td><%= r.clientName %></td>
+                    <td><%= r.boatName %></td>
+                    <td><%= new Date(r.startDate).toLocaleDateString('fr-FR') %></td>
+                    <td><%= new Date(r.endDate).toLocaleDateString('fr-FR') %></td>
+                    <td>
+                        <a href="/reservations-page/<%= r._id %>">Voir</a>
+                        <a href="/reservations-page/<%= r._id %>/edit">Modifier</a>
+                        <form action="/reservations-page/<%= r._id %>/delete" method="POST" style="display:inline">
+                            <button type="submit" onclick="return confirm('Supprimer cette reservation ?')">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</main>
+
+<%- include('../partials/footer') %>

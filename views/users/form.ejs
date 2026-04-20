@@ -1,0 +1,26 @@
+<%- include('../partials/header') %>
+<%- include('../partials/menu') %>
+
+<main>
+    <h2><%= userEdit ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur' %></h2>
+
+    <form action="<%= userEdit ? '/users-page/' + userEdit.email + '/edit' : '/users-page' %>" method="POST">
+        <label for="username">Nom d'utilisateur</label>
+        <input type="text" id="username" name="username" value="<%= userEdit ? userEdit.username : '' %>" required>
+
+        <% if (!userEdit) { %>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        <% } else { %>
+            <p>Email : <strong><%= userEdit.email %></strong></p>
+        <% } %>
+
+        <label for="password">Mot de passe <%= userEdit ? '(laisser vide pour ne pas changer)' : '' %></label>
+        <input type="password" id="password" name="password" <%= userEdit ? '' : 'required' %> minlength="6">
+
+        <button type="submit">Enregistrer</button>
+        <a href="/users-page">Annuler</a>
+    </form>
+</main>
+
+<%- include('../partials/footer') %>

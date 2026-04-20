@@ -1,0 +1,24 @@
+<%- include('../partials/header') %>
+<%- include('../partials/menu') %>
+
+<main>
+    <h2>Detail de la reservation</h2>
+
+    <dl>
+        <dt>Catway</dt>
+        <dd><%= reservation.catwayNumber %></dd>
+        <dt>Client</dt>
+        <dd><%= reservation.clientName %></dd>
+        <dt>Bateau</dt>
+        <dd><%= reservation.boatName %></dd>
+        <dt>Debut</dt>
+        <dd><%= new Date(reservation.startDate).toLocaleDateString('fr-FR') %></dd>
+        <dt>Fin</dt>
+        <dd><%= new Date(reservation.endDate).toLocaleDateString('fr-FR') %></dd>
+    </dl>
+
+    <a href="/reservations-page/<%= reservation._id %>/edit">Modifier</a>
+    <a href="/reservations-page">Retour</a>
+</main>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,94 @@
+<%- include('partials/header') %>
+
+<main class="doc">
+    <h2>Documentation de l'API</h2>
+    <p><a href="/">Retour a l'accueil</a></p>
+
+    <p>
+        L'API est privee. Toutes les routes (sauf <code>/login</code>) necessitent un token JWT
+        valide envoye dans le header <code>Authorization: Bearer &lt;token&gt;</code>.
+    </p>
+
+    <h3>Authentification</h3>
+    <table>
+        <thead><tr><th>Methode</th><th>URL</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td>POST</td><td>/login</td><td>Authentifie un utilisateur (email, password) et renvoie un token JWT</td></tr>
+            <tr><td>GET</td><td>/logout</td><td>Deconnecte l'utilisateur</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Catways</h3>
+    <table>
+        <thead><tr><th>Methode</th><th>URL</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td>GET</td><td>/catways</td><td>Liste tous les catways</td></tr>
+            <tr><td>GET</td><td>/catways/:id</td><td>Detail d'un catway (id = numero du catway)</td></tr>
+            <tr><td>POST</td><td>/catways</td><td>Cree un catway (catwayNumber, catwayType, catwayState)</td></tr>
+            <tr><td>PUT</td><td>/catways/:id</td><td>Modifie l'etat d'un catway (catwayState)</td></tr>
+            <tr><td>DELETE</td><td>/catways/:id</td><td>Supprime un catway</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Reservations</h3>
+    <table>
+        <thead><tr><th>Methode</th><th>URL</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td>GET</td><td>/catways/:id/reservations</td><td>Liste les reservations d'un catway</td></tr>
+            <tr><td>GET</td><td>/catways/:id/reservations/:idReservation</td><td>Detail d'une reservation</td></tr>
+            <tr><td>POST</td><td>/catways/:id/reservations</td><td>Cree une reservation pour ce catway</td></tr>
+            <tr><td>PUT</td><td>/catways/:id/reservations/:idReservation</td><td>Modifie une reservation</td></tr>
+            <tr><td>DELETE</td><td>/catways/:id/reservations/:idReservation</td><td>Supprime une reservation</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Utilisateurs</h3>
+    <table>
+        <thead><tr><th>Methode</th><th>URL</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td>GET</td><td>/users/</td><td>Liste tous les utilisateurs</td></tr>
+            <tr><td>GET</td><td>/users/:email</td><td>Detail d'un utilisateur</td></tr>
+            <tr><td>POST</td><td>/users/</td><td>Cree un utilisateur (username, email, password)</td></tr>
+            <tr><td>PUT</td><td>/users/:email</td><td>Modifie un utilisateur</td></tr>
+            <tr><td>DELETE</td><td>/users/:email</td><td>Supprime un utilisateur</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Exemples de requetes</h3>
+    <h4>Connexion</h4>
+    <pre>
+POST /login
+Content-Type: application/x-www-form-urlencoded
+
+email=admin@russell.com&password=motdepasse
+    </pre>
+
+    <h4>Creer un catway</h4>
+    <pre>
+POST /catways
+Authorization: Bearer &lt;token&gt;
+Content-Type: application/json
+
+{
+    "catwayNumber": 25,
+    "catwayType": "short",
+    "catwayState": "bon etat"
+}
+    </pre>
+
+    <h4>Creer une reservation</h4>
+    <pre>
+POST /catways/1/reservations
+Authorization: Bearer &lt;token&gt;
+Content-Type: application/json
+
+{
+    "clientName": "Jean Dupont",
+    "boatName": "Le Titanic",
+    "startDate": "2024-06-01",
+    "endDate": "2024-06-15"
+}
+    </pre>
+</main>
+
+<%- include('partials/footer') %>

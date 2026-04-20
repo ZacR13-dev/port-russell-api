@@ -1,0 +1,34 @@
+<%- include('../partials/header') %>
+<%- include('../partials/menu') %>
+
+<main>
+    <h2><%= reservation ? 'Modifier la reservation' : 'Nouvelle reservation' %></h2>
+
+    <form action="<%= reservation ? '/reservations-page/' + reservation._id + '/edit' : '/reservations-page' %>" method="POST">
+        <label for="catwayNumber">Catway</label>
+        <select id="catwayNumber" name="catwayNumber" required>
+            <% catways.forEach(function (c) { %>
+                <option value="<%= c.catwayNumber %>" <%= reservation && reservation.catwayNumber == c.catwayNumber ? 'selected' : '' %>>
+                    N° <%= c.catwayNumber %> (<%= c.catwayType %>)
+                </option>
+            <% }); %>
+        </select>
+
+        <label for="clientName">Nom du client</label>
+        <input type="text" id="clientName" name="clientName" value="<%= reservation ? reservation.clientName : '' %>" required>
+
+        <label for="boatName">Nom du bateau</label>
+        <input type="text" id="boatName" name="boatName" value="<%= reservation ? reservation.boatName : '' %>" required>
+
+        <label for="startDate">Date de debut</label>
+        <input type="date" id="startDate" name="startDate" value="<%= reservation ? reservation.startDate.toISOString().split('T')[0] : '' %>" required>
+
+        <label for="endDate">Date de fin</label>
+        <input type="date" id="endDate" name="endDate" value="<%= reservation ? reservation.endDate.toISOString().split('T')[0] : '' %>" required>
+
+        <button type="submit">Enregistrer</button>
+        <a href="/reservations-page">Annuler</a>
+    </form>
+</main>
+
+<%- include('../partials/footer') %>
