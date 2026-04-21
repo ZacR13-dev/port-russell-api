@@ -35,58 +35,6 @@ router.get('/', (req, res) => {
 });
 
 /**
- * Traitement du formulaire de connexion (depuis la page d'accueil).
- */
-router.post('/login', async (req, res) => {
-    const bcrypt = require('bcrypt');
-    const { email, password } = req.body;
-
-    try {
-        const user = await User.findOne({ email: email });
-
-        if (!user) {
-            return res.render('index', {
-                title: 'Port de plaisance Russell',
-                error: 'Utilisateur non trouve'
-            });
-        }
-
-        const valid = bcrypt.compareSync(password, user.password);
-
-        if (!valid) {
-            return res.render('index', {
-                title: 'Port de plaisance Russell',
-                error: 'Mot de passe incorrect'
-            });
-        }
-
-        const expireIn = 24 * 60 * 60;
-        const token = jwt.sign(
-            { user: { _id: user._id, username: user.username, email: user.email } },
-            SECRET_KEY,
-            { expiresIn: expireIn }
-        );
-
-        res.cookie('token', token, { httpOnly: true, maxAge: expireIn * 1000 });
-        return res.redirect('/dashboard');
-    } catch (error) {
-        console.log(error);
-        return res.render('index', {
-            title: 'Port de plaisance Russell',
-            error: 'Une erreur est survenue'
-        });
-    }
-});
-
-/**
- * Deconnexion : supprime le cookie et redirige vers la page d'accueil.
- */
-router.get('/logout', (req, res) => {
-    res.clearCookie('token');
-    return res.redirect('/');
-});
-
-/**
  * Tableau de bord (necessite d'etre connecte).
  */
 router.get('/dashboard', checkAuth, async (req, res) => {
