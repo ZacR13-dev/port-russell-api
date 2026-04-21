@@ -578,7 +578,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_reservations.js.html">services/reservations.js</a>, <a href="services_reservations.js.html#line45">line 45</a>
+        <a href="services_reservations.js.html">services/reservations.js</a>, <a href="services_reservations.js.html#line88">line 88</a>
     </li></ul></dd>
     
 
@@ -986,7 +986,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="routes_dashboard.js.html">routes/dashboard.js</a>, <a href="routes_dashboard.js.html#line14">line 14</a>
+        <a href="routes_dashboard.js.html">routes/dashboard.js</a>, <a href="routes_dashboard.js.html#line15">line 15</a>
     </li></ul></dd>
     
 
@@ -1490,7 +1490,7 @@ Lit le token dans le header Authorization ou dans le cookie.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_reservations.js.html">services/reservations.js</a>, <a href="services_reservations.js.html#line102">line 102</a>
+        <a href="services_reservations.js.html">services/reservations.js</a>, <a href="services_reservations.js.html#line165">line 165</a>
     </li></ul></dd>
     
 
@@ -1970,7 +1970,7 @@ Lit le token dans le header Authorization ou dans le cookie.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_reservations.js.html">services/reservations.js</a>, <a href="services_reservations.js.html#line9">line 9</a>
+        <a href="services_reservations.js.html">services/reservations.js</a>, <a href="services_reservations.js.html#line52">line 52</a>
     </li></ul></dd>
     
 
@@ -2610,7 +2610,7 @@ Lit le token dans le header Authorization ou dans le cookie.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_reservations.js.html">services/reservations.js</a>, <a href="services_reservations.js.html#line25">line 25</a>
+        <a href="services_reservations.js.html">services/reservations.js</a>, <a href="services_reservations.js.html#line68">line 68</a>
     </li></ul></dd>
     
 
@@ -3125,7 +3125,7 @@ Lance : npm run import</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_reservations.js.html">services/reservations.js</a>, <a href="services_reservations.js.html#line75">line 75</a>
+        <a href="services_reservations.js.html">services/reservations.js</a>, <a href="services_reservations.js.html#line127">line 127</a>
     </li></ul></dd>
     
 
@@ -3321,6 +3321,283 @@ Lance : npm run import</p>
     
 
     
+    <h4 class="name" id="validateReservation"><span class="type-signature"></span>validateReservation<span class="signature">(catwayNumber, startDate, endDate, excludeId<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise.&lt;Object>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Verifie qu'une reservation est valide :</p>
+<ul>
+<li>dates coherentes (endDate &gt; startDate)</li>
+<li>pas de chevauchement avec une autre reservation sur le meme catway</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>catwayNumber</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+|
+
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>numero du catway concerne</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>startDate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+|
+
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>date de debut de la reservation</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>endDate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+|
+
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>date de fin de la reservation</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>excludeId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>id d'une reservation a exclure (cas d'une modification)</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="services_reservations.js.html">services/reservations.js</a>, <a href="services_reservations.js.html#line14">line 14</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>objet de la forme { ok: boolean, message: string }</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Object></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="wantsJson"><span class="type-signature"></span>wantsJson<span class="signature">(req)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
     
 
@@ -3487,13 +3764,13 @@ ou une reponse HTML (formulaire du navigateur).</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Catway">Catway</a></li><li><a href="global.html#Reservation">Reservation</a></li><li><a href="global.html#User">User</a></li><li><a href="global.html#add">add</a></li><li><a href="global.html#authenticate">authenticate</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#checkJWT">checkJWT</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#getAll">getAll</a></li><li><a href="global.html#getByEmail">getByEmail</a></li><li><a href="global.html#getById">getById</a></li><li><a href="global.html#importData">importData</a></li><li><a href="global.html#initClientDbConnection">initClientDbConnection</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#wantsJson">wantsJson</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Catway">Catway</a></li><li><a href="global.html#Reservation">Reservation</a></li><li><a href="global.html#User">User</a></li><li><a href="global.html#add">add</a></li><li><a href="global.html#authenticate">authenticate</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#checkJWT">checkJWT</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#getAll">getAll</a></li><li><a href="global.html#getByEmail">getByEmail</a></li><li><a href="global.html#getById">getById</a></li><li><a href="global.html#importData">importData</a></li><li><a href="global.html#initClientDbConnection">initClientDbConnection</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#validateReservation">validateReservation</a></li><li><a href="global.html#wantsJson">wantsJson</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Apr 21 2026 09:44:44 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 21 2026 10:12:30 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

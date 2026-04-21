@@ -26,7 +26,13 @@ const Reservation = new Schema({
     },
     endDate: {
         type: Date,
-        required: [true, 'La date de fin est requise']
+        required: [true, 'La date de fin est requise'],
+        validate: {
+            validator: function (value) {
+                return value > this.startDate;
+            },
+            message: 'La date de fin doit etre posterieure a la date de debut'
+        }
     }
 });
 

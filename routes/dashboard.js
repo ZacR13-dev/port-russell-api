@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const Reservation = require('../models/reservation');
 const Catway = require('../models/catway');
 const User = require('../models/user');
+const reservationsService = require('../services/reservations');
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
@@ -144,11 +145,34 @@ router.get('/reservations-page', checkAuth, async (req, res) => {
 
 router.get('/reservations-page/new', checkAuth, async (req, res) => {
     const catways = await Catway.find({}).sort({ catwayNumber: 1 });
-    res.render('reservations/form', { title: 'Nouvelle reservation', reservation: null, catways: catways, user: req.user });
+    res.render('reservations/form', {
+        title: 'Nouvelle reservation',
+        reservation: null,
+        catways: catways,
+        user: req.user,
+        error: null
+    });
 });
 
 router.post('/reservations-page', checkAuth, async (req, res) => {
     try {
+        const check = await reservationsService.validateReservation(
+            req.body.catwayNumber,
+            req.body.startDate,
+            req.body.endDate
+        );
+        if (!check.ok) {
+            const catways = await Catway.find({}).sort({ catwayNumber: 1 });
+            return res.status(400).render('reservations/form', {
+                title: 'Nouvelle reservation',
+                reservation: null,
+                formData: req.body,
+                catways: catways,
+                user: req.user,
+                error: check.message
+            });
+        }
+
         await Reservation.create({
             catwayNumber: req.body.catwayNumber,
             clientName: req.body.clientName,
@@ -158,7 +182,15 @@ router.post('/reservations-page', checkAuth, async (req, res) => {
         });
         res.redirect('/reservations-page');
     } catch (error) {
-        res.status(400).send(error.message);
+        const catways = await Catway.find({}).sort({ catwayNumber: 1 });
+        return res.status(400).render('reservations/form', {
+            title: 'Nouvelle reservation',
+            reservation: null,
+            formData: req.body,
+            catways: catways,
+            user: req.user,
+            error: error.message
+        });
     }
 });
 
@@ -170,18 +202,56 @@ router.get('/reservations-page/:id', checkAuth, async (req, res) => {
 router.get('/reservations-page/:id/edit', checkAuth, async (req, res) => {
     const reservation = await Reservation.findById(req.params.id);
     const catways = await Catway.find({}).sort({ catwayNumber: 1 });
-    res.render('reservations/form', { title: 'Modifier reservation', reservation: reservation, catways: catways, user: req.user });
+    res.render('reservations/form', {
+        title: 'Modifier reservation',
+        reservation: reservation,
+        catways: catways,
+        user: req.user,
+        error: null
+    });
 });
 
 router.post('/reservations-page/:id/edit', checkAuth, async (req, res) => {
-    await Reservation.findByIdAndUpdate(req.params.id, {
-        catwayNumber: req.body.catwayNumber,
-        clientName: req.body.clientName,
-        boatName: req.body.boatName,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate
-    });
-    res.redirect('/reservations-page');
+    try {
+        const check = await reservationsService.validateReservation(
+            req.body.catwayNumber,
+            req.body.startDate,
+            req.body.endDate,
+            req.params.id
+        );
+        if (!check.ok) {
+            const reservation = await Reservation.findById(req.params.id);
+            const catways = await Catway.find({}).sort({ catwayNumber: 1 });
+            return res.status(400).render('reservations/form', {
+                title: 'Modifier reservation',
+                reservation: reservation,
+                formData: req.body,
+                catways: catways,
+                user: req.user,
+                error: check.message
+            });
+        }
+
+        await Reservation.findByIdAndUpdate(req.params.id, {
+            catwayNumber: req.body.catwayNumber,
+            clientName: req.body.clientName,
+            boatName: req.body.boatName,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate
+        }, { runValidators: true });
+        res.redirect('/reservations-page');
+    } catch (error) {
+        const reservation = await Reservation.findById(req.params.id);
+        const catways = await Catway.find({}).sort({ catwayNumber: 1 });
+        return res.status(400).render('reservations/form', {
+            title: 'Modifier reservation',
+            reservation: reservation,
+            formData: req.body,
+            catways: catways,
+            user: req.user,
+            error: error.message
+        });
+    }
 });
 
 router.post('/reservations-page/:id/delete', checkAuth, async (req, res) => {

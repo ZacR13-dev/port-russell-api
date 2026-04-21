@@ -1,30 +1,48 @@
 <%- include('../partials/header') %>
 <%- include('../partials/menu') %>
 
+<%
+    var fd = (typeof formData !== 'undefined' && formData) ? formData : null;
+    function val(field) {
+        if (fd && fd[field] !== undefined && fd[field] !== null) return fd[field];
+        if (reservation && reservation[field] !== undefined && reservation[field] !== null) {
+            if ((field === 'startDate' || field === 'endDate') && reservation[field] instanceof Date) {
+                return reservation[field].toISOString().split('T')[0];
+            }
+            return reservation[field];
+        }
+        return '';
+    }
+%>
+
 <main>
     <h2><%= reservation ? 'Modifier la reservation' : 'Nouvelle reservation' %></h2>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+        <p class="error"><%= error %></p>
+    <% } %>
 
     <form action="<%= reservation ? '/reservations-page/' + reservation._id + '/edit' : '/reservations-page' %>" method="POST">
         <label for="catwayNumber">Catway</label>
         <select id="catwayNumber" name="catwayNumber" required>
             <% catways.forEach(function (c) { %>
-                <option value="<%= c.catwayNumber %>" <%= reservation && reservation.catwayNumber == c.catwayNumber ? 'selected' : '' %>>
+                <option value="<%= c.catwayNumber %>" <%= val('catwayNumber') == c.catwayNumber ? 'selected' : '' %>>
                     N° <%= c.catwayNumber %> (<%= c.catwayType %>)
                 </option>
             <% }); %>
         </select>
 
         <label for="clientName">Nom du client</label>
-        <input type="text" id="clientName" name="clientName" value="<%= reservation ? reservation.clientName : '' %>" required>
+        <input type="text" id="clientName" name="clientName" value="<%= val('clientName') %>" required>
 
         <label for="boatName">Nom du bateau</label>
-        <input type="text" id="boatName" name="boatName" value="<%= reservation ? reservation.boatName : '' %>" required>
+        <input type="text" id="boatName" name="boatName" value="<%= val('boatName') %>" required>
 
         <label for="startDate">Date de debut</label>
-        <input type="date" id="startDate" name="startDate" value="<%= reservation ? reservation.startDate.toISOString().split('T')[0] : '' %>" required>
+        <input type="date" id="startDate" name="startDate" value="<%= val('startDate') %>" required>
 
         <label for="endDate">Date de fin</label>
-        <input type="date" id="endDate" name="endDate" value="<%= reservation ? reservation.endDate.toISOString().split('T')[0] : '' %>" required>
+        <input type="date" id="endDate" name="endDate" value="<%= val('endDate') %>" required>
 
         <button type="submit">Enregistrer</button>
         <a href="/reservations-page">Annuler</a>
