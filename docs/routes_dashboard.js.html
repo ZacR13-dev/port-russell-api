@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: routes/dashboard.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: routes/dashboard.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const express = require('express');
+const router = express.Router();
+const jwt = require('jsonwebtoken');
+
+const Reservation = require('../models/reservation');
+const Catway = require('../models/catway');
+const User = require('../models/user');
+
+const SECRET_KEY = process.env.SECRET_KEY;
+
+/**
+ * Middleware de verification du token pour les pages (redirige vers /).
+ */
+function checkAuth(req, res, next) {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.redirect('/');
+    }
+
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.redirect('/');
+        }
+        req.user = decoded.user;
+        next();
+    });
+}
+
+/**
+ * Page d'accueil avec formulaire de connexion.
+ */
+router.get('/', (req, res) => {
+    res.render('index', { title: 'Port de plaisance Russell', error: null });
+});
+
+/**
+ * Tableau de bord (necessite d'etre connecte).
+ */
+router.get('/dashboard', checkAuth, async (req, res) => {
+    try {
+        const today = new Date();
+
+        const reservations = await Reservation.find({
+            startDate: { $lte: today },
+            endDate: { $gte: today }
+        });
+
+        return res.render('dashboard', {
+            title: 'Tableau de bord',
+            user: req.user,
+            today: today,
+            reservations: reservations
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send('Erreur serveur');
+    }
+});
+
+/**
+ * Page de la documentation de l'API.
+ */
+router.get('/documentation', (req, res) => {
+    res.render('documentation', { title: 'Documentation de l\'API' });
+});
+
+/**
+ * Pages CRUD catways.
+ */
+router.get('/catways-page', checkAuth, async (req, res) => {
+    const catways = await Catway.find({}).sort({ catwayNumber: 1 });
+    res.render('catways/list', { title: 'Gestion des catways', catways: catways, user: req.user });
+});
+
+router.get('/catways-page/new', checkAuth, (req, res) => {
+    res.render('catways/form', { title: 'Nouveau catway', catway: null, user: req.user });
+});
+
+router.post('/catways-page', checkAuth, async (req, res) => {
+    try {
+        await Catway.create({
+            catwayNumber: req.body.catwayNumber,
+            catwayType: req.body.catwayType,
+            catwayState: req.body.catwayState
+        });
+        res.redirect('/catways-page');
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+});
+
+router.get('/catways-page/:id', checkAuth, async (req, res) => {
+    const catway = await Catway.findOne({ catwayNumber: req.params.id });
+    res.render('catways/detail', { title: 'Detail catway', catway: catway, user: req.user });
+});
+
+router.get('/catways-page/:id/edit', checkAuth, async (req, res) => {
+    const catway = await Catway.findOne({ catwayNumber: req.params.id });
+    res.render('catways/form', { title: 'Modifier catway', catway: catway, user: req.user });
+});
+
+router.post('/catways-page/:id/edit', checkAuth, async (req, res) => {
+    await Catway.updateOne(
+        { catwayNumber: req.params.id },
+        { catwayState: req.body.catwayState }
+    );
+    res.redirect('/catways-page');
+});
+
+router.post('/catways-page/:id/delete', checkAuth, async (req, res) => {
+    await Catway.deleteOne({ catwayNumber: req.params.id });
+    res.redirect('/catways-page');
+});
+
+/**
+ * Pages CRUD reservations.
+ */
+router.get('/reservations-page', checkAuth, async (req, res) => {
+    const reservations = await Reservation.find({});
+    res.render('reservations/list', { title: 'Gestion des reservations', reservations: reservations, user: req.user });
+});
+
+router.get('/reservations-page/new', checkAuth, async (req, res) => {
+    const catways = await Catway.find({}).sort({ catwayNumber: 1 });
+    res.render('reservations/form', { title: 'Nouvelle reservation', reservation: null, catways: catways, user: req.user });
+});
+
+router.post('/reservations-page', checkAuth, async (req, res) => {
+    try {
+        await Reservation.create({
+            catwayNumber: req.body.catwayNumber,
+            clientName: req.body.clientName,
+            boatName: req.body.boatName,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate
+        });
+        res.redirect('/reservations-page');
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+});
+
+router.get('/reservations-page/:id', checkAuth, async (req, res) => {
+    const reservation = await Reservation.findById(req.params.id);
+    res.render('reservations/detail', { title: 'Detail reservation', reservation: reservation, user: req.user });
+});
+
+router.get('/reservations-page/:id/edit', checkAuth, async (req, res) => {
+    const reservation = await Reservation.findById(req.params.id);
+    const catways = await Catway.find({}).sort({ catwayNumber: 1 });
+    res.render('reservations/form', { title: 'Modifier reservation', reservation: reservation, catways: catways, user: req.user });
+});
+
+router.post('/reservations-page/:id/edit', checkAuth, async (req, res) => {
+    await Reservation.findByIdAndUpdate(req.params.id, {
+        catwayNumber: req.body.catwayNumber,
+        clientName: req.body.clientName,
+        boatName: req.body.boatName,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate
+    });
+    res.redirect('/reservations-page');
+});
+
+router.post('/reservations-page/:id/delete', checkAuth, async (req, res) => {
+    await Reservation.findByIdAndDelete(req.params.id);
+    res.redirect('/reservations-page');
+});
+
+/**
+ * Pages CRUD utilisateurs.
+ */
+router.get('/users-page', checkAuth, async (req, res) => {
+    const users = await User.find({}, '-password');
+    res.render('users/list', { title: 'Gestion des utilisateurs', users: users, user: req.user });
+});
+
+router.get('/users-page/new', checkAuth, (req, res) => {
+    res.render('users/form', { title: 'Nouvel utilisateur', userEdit: null, user: req.user });
+});
+
+router.post('/users-page', checkAuth, async (req, res) => {
+    try {
+        await User.create({
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password
+        });
+        res.redirect('/users-page');
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+});
+
+router.get('/users-page/:email', checkAuth, async (req, res) => {
+    const userEdit = await User.findOne({ email: req.params.email }, '-password');
+    res.render('users/detail', { title: 'Detail utilisateur', userEdit: userEdit, user: req.user });
+});
+
+router.get('/users-page/:email/edit', checkAuth, async (req, res) => {
+    const userEdit = await User.findOne({ email: req.params.email }, '-password');
+    res.render('users/form', { title: 'Modifier utilisateur', userEdit: userEdit, user: req.user });
+});
+
+router.post('/users-page/:email/edit', checkAuth, async (req, res) => {
+    const u = await User.findOne({ email: req.params.email });
+    if (req.body.username) u.username = req.body.username;
+    if (req.body.password) u.password = req.body.password;
+    u.updatedAt = new Date();
+    await u.save();
+    res.redirect('/users-page');
+});
+
+router.post('/users-page/:email/delete', checkAuth, async (req, res) => {
+    await User.deleteOne({ email: req.params.email });
+    res.redirect('/users-page');
+});
+
+module.exports = router;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Catway">Catway</a></li><li><a href="global.html#Reservation">Reservation</a></li><li><a href="global.html#User">User</a></li><li><a href="global.html#add">add</a></li><li><a href="global.html#authenticate">authenticate</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#checkJWT">checkJWT</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#getAll">getAll</a></li><li><a href="global.html#getByEmail">getByEmail</a></li><li><a href="global.html#getById">getById</a></li><li><a href="global.html#importData">importData</a></li><li><a href="global.html#initClientDbConnection">initClientDbConnection</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#wantsJson">wantsJson</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Apr 21 2026 09:30:27 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+    "source": {
+        "include": ["app.js", "bin", "db", "middlewares", "models", "routes", "services", "data/import.js"],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "opts": {
+        "destination": "./docs/",
+        "recurse": true,
+        "readme": "./README.md"
+    },
+    "plugins": ["plugins/markdown"],
+    "templates": {
+        "cleverLinks": true,
+        "monospaceLinks": false
+    }
+}

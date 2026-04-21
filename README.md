@@ -72,7 +72,19 @@ port-russell-api/
 ├── middlewares/        # middleware JWT
 ├── views/              # templates EJS
 ├── public/             # fichiers statiques (CSS)
+├── docs/               # documentation JSDoc generee
 └── README.md
+```
+
+## Documentation du code (JSDoc)
+
+Le code est documente avec JSDoc. La documentation HTML est disponible dans le
+dossier `docs/` (ouvrir `docs/index.html` dans un navigateur).
+
+Pour la regenerer :
+
+```
+npm run doc
 ```
 
 ## Fonctionnalites

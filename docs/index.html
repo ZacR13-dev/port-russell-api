@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>Port de plaisance Russell - API</h1>
+<p>API REST pour la gestion des catways et des reservations du port de plaisance Russell.</p>
+<h2>Technologies</h2>
+<ul>
+<li>Node.js</li>
+<li>Express</li>
+<li>MongoDB (Mongoose)</li>
+<li>EJS (moteur de template)</li>
+<li>JWT (authentification)</li>
+<li>bcrypt (chiffrement des mots de passe)</li>
+</ul>
+<h2>Installation</h2>
+<ol>
+<li>Cloner le depot :</li>
+</ol>
+<pre class="prettyprint source"><code>git clone https://github.com/&lt;username>/port-russell-api.git
+cd port-russell-api
+</code></pre>
+<ol start="2">
+<li>Installer les dependances :</li>
+</ol>
+<pre class="prettyprint source"><code>npm install
+</code></pre>
+<ol start="3">
+<li>Creer un fichier <code>.env</code> a la racine (voir <code>.env.example</code>) :</li>
+</ol>
+<pre class="prettyprint source"><code>URL_MONGO=mongodb+srv://&lt;user>:&lt;password>@&lt;cluster>.mongodb.net/port_russell
+SECRET_KEY=GTGh6rdP54GT76
+PORT=3000
+</code></pre>
+<ol start="4">
+<li>Importer les donnees initiales (catways, reservations, utilisateur admin) :</li>
+</ol>
+<pre class="prettyprint source"><code>npm run import
+</code></pre>
+<p>Un utilisateur par defaut est cree :</p>
+<ul>
+<li>email : <code>admin@russell.com</code></li>
+<li>mot de passe : <code>admin1234</code></li>
+</ul>
+<ol start="5">
+<li>Demarrer le serveur :</li>
+</ol>
+<pre class="prettyprint source"><code>npm start
+</code></pre>
+<p>En mode developpement (avec nodemon) :</p>
+<pre class="prettyprint source"><code>npm run dev
+</code></pre>
+<p>L'application est accessible a l'adresse <code>http://localhost:3000</code>.</p>
+<h2>Structure du projet</h2>
+<pre class="prettyprint source"><code>port-russell-api/
+├── app.js              # configuration Express
+├── bin/www             # point d'entree
+├── db/mongo.js         # connexion MongoDB
+├── data/               # donnees d'import et script
+├── models/             # schemas Mongoose
+├── services/           # logique metier
+├── routes/             # routes API et pages
+├── middlewares/        # middleware JWT
+├── views/              # templates EJS
+├── public/             # fichiers statiques (CSS)
+└── README.md
+</code></pre>
+<h2>Fonctionnalites</h2>
+<ul>
+<li>Authentification avec JWT (token stocke en cookie)</li>
+<li>CRUD sur les catways</li>
+<li>CRUD sur les reservations (sous-ressources des catways)</li>
+<li>CRUD sur les utilisateurs</li>
+<li>Tableau de bord avec les reservations en cours</li>
+<li>Documentation de l'API accessible via <code>/documentation</code></li>
+</ul>
+<h2>Routes de l'API</h2>
+<p>Voir la documentation complete a l'adresse <code>/documentation</code>.</p>
+<h3>Authentification</h3>
+<ul>
+<li><code>POST /login</code> : connexion</li>
+<li><code>GET /logout</code> : deconnexion</li>
+</ul>
+<h3>Catways</h3>
+<ul>
+<li><code>GET /catways</code> : liste</li>
+<li><code>GET /catways/:id</code> : detail</li>
+<li><code>POST /catways</code> : creer</li>
+<li><code>PUT /catways/:id</code> : modifier l'etat</li>
+<li><code>DELETE /catways/:id</code> : supprimer</li>
+</ul>
+<h3>Reservations</h3>
+<ul>
+<li><code>GET /catways/:id/reservations</code></li>
+<li><code>GET /catways/:id/reservations/:idReservation</code></li>
+<li><code>POST /catways/:id/reservations</code></li>
+<li><code>PUT /catways/:id/reservations/:idReservation</code></li>
+<li><code>DELETE /catways/:id/reservations/:idReservation</code></li>
+</ul>
+<h3>Utilisateurs</h3>
+<ul>
+<li><code>GET /users/</code></li>
+<li><code>GET /users/:email</code></li>
+<li><code>POST /users/</code></li>
+<li><code>PUT /users/:email</code></li>
+<li><code>DELETE /users/:email</code></li>
+</ul>
+<h2>Deploiement</h2>
+<p>L'application peut etre deployee sur des plateformes comme Render, Railway, Heroku ou Vercel.</p>
+<h3>Exemple avec Render</h3>
+<ol>
+<li>Pousser le projet sur GitHub.</li>
+<li>Creer un nouveau Web Service sur Render et connecter le depot.</li>
+<li>Configurer :
+<ul>
+<li>Build Command : <code>npm install</code></li>
+<li>Start Command : <code>npm start</code></li>
+</ul>
+</li>
+<li>Ajouter les variables d'environnement (<code>URL_MONGO</code>, <code>SECRET_KEY</code>, <code>PORT</code>).</li>
+<li>Deployer.</li>
+</ol>
+<h2>Compte de test</h2>
+<ul>
+<li>email : <code>admin@russell.com</code></li>
+<li>mot de passe : <code>admin1234</code></li>
+</ul></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Catway">Catway</a></li><li><a href="global.html#Reservation">Reservation</a></li><li><a href="global.html#User">User</a></li><li><a href="global.html#add">add</a></li><li><a href="global.html#authenticate">authenticate</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#checkJWT">checkJWT</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#getAll">getAll</a></li><li><a href="global.html#getByEmail">getByEmail</a></li><li><a href="global.html#getById">getById</a></li><li><a href="global.html#importData">importData</a></li><li><a href="global.html#initClientDbConnection">initClientDbConnection</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#wantsJson">wantsJson</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Apr 21 2026 09:30:27 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
