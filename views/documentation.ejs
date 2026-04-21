@@ -1,8 +1,15 @@
 <%- include('partials/header') %>
+<% if (typeof isAuth !== 'undefined' && isAuth) { %>
+    <%- include('partials/menu') %>
+<% } %>
 
 <main class="doc">
     <h2>Documentation de l'API</h2>
-    <p><a href="/">Retour a l'accueil</a></p>
+    <% if (typeof isAuth !== 'undefined' && isAuth) { %>
+        <p><a href="/dashboard">Retour au tableau de bord</a></p>
+    <% } else { %>
+        <p><a href="/">Retour a l'accueil</a></p>
+    <% } %>
 
     <p>
         L'API est privee. Toutes les routes (sauf <code>/login</code>) necessitent un token JWT

@@ -29,8 +29,18 @@ function checkAuth(req, res, next) {
 
 /**
  * Page d'accueil avec formulaire de connexion.
+ * Si l'utilisateur est deja connecte, redirige vers le tableau de bord.
  */
 router.get('/', (req, res) => {
+    const token = req.cookies.token;
+    if (token) {
+        return jwt.verify(token, SECRET_KEY, (err) => {
+            if (!err) {
+                return res.redirect('/dashboard');
+            }
+            return res.render('index', { title: 'Port de plaisance Russell', error: null });
+        });
+    }
     res.render('index', { title: 'Port de plaisance Russell', error: null });
 });
 
@@ -60,9 +70,20 @@ router.get('/dashboard', checkAuth, async (req, res) => {
 
 /**
  * Page de la documentation de l'API.
+ * Indique a la vue si l'utilisateur est connecte (pour adapter le bouton retour).
  */
 router.get('/documentation', (req, res) => {
-    res.render('documentation', { title: 'Documentation de l\'API' });
+    let isAuth = false;
+    const token = req.cookies.token;
+    if (token) {
+        try {
+            jwt.verify(token, SECRET_KEY);
+            isAuth = true;
+        } catch (e) {
+            isAuth = false;
+        }
+    }
+    res.render('documentation', { title: 'Documentation de l\'API', isAuth: isAuth });
 });
 
 /**
